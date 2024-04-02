@@ -9,19 +9,26 @@ framework:
 #                format: json
 #                context: { }
 
+        serializer:
+#            default_serializer: messenger.transport.symfony_serializer
+            symfony_serializer:
+                format: json
+                context: { }
+
         transports:
             null_transport: 'in-memory://'
             sync: 'sync://'
             async: '%env(MESSENGER_TRANSPORT_DSN)%'
-#            send_mail:
-#                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
-#                options:
-#                    exchange:
-#                        name: 'microservice-exchange'
-#                        type: direct
-#                    queues:
-#                        send_mail:
-#                            binding_keys: ['send_mail']
+            send_mail:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                serializer: messenger.transport.symfony_serializer
+                options:
+                    exchange:
+                        name: 'microservice-exchange'
+                        type: direct
+                    queues:
+                        send_mail:
+                            binding_keys: ['send_mail']
             async_priority_high:
                 dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
                 options:
@@ -40,7 +47,7 @@ framework:
             'Shared\Domain\Bus\Event\DomainEvent': [ async ]
             'App\Modules\User\Application\UserEnable\UserEnabledMessage': [ async_priority_high ]
             'App\Modules\User\Application\UserDisable\UserDisabledMessage': [ async_priority_high ]
-#            'App\Modules\User\Application\UserDisable\SendMailUserDisabledMessage': [ send_mail ]
+            'App\Modules\User\Application\UserDisable\SendMailUserDisabledMessage': [ send_mail ]
 
         buses:
             command.bus:

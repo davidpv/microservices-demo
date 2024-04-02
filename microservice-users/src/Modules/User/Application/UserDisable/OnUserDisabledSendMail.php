@@ -26,6 +26,6 @@ final readonly class OnUserDisabledSendMail
             "{$data['email']},admin@admin.com",
             "Hello {$data['username']}, your account has been disabled."
         );
-//        $this->bus->dispatch($message, [new AmqpStamp('send_mail')]);
+        $this->bus->dispatch($message, [new AmqpStamp('send_mail')]);
     }
 }
