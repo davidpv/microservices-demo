@@ -1,0 +1,11 @@
+list:
+    path: /
+    controller: App\Apps\Api\Posts\GetListPostsController
+    methods: GET
+
+create:
+    path: /
+    controller: App\Apps\Api\Posts\PostCreatePostController
+    methods: POST
+
+

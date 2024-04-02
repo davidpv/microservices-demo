@@ -1,0 +1,9 @@
+services:
+
+#    Shared\Infrastructure\Symfony\ApiControllerInterface:
+#        public: true
+#        tags: [ 'controller.service_arguments' ]
+
+#    App\Apps\Api\:
+#        resource: '../../src/Apps/Api/*'
+#        tags: [ 'controller.service_arguments' ]

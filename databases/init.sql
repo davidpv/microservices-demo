@@ -1,0 +1,3 @@
+CREATE DATABASE events;
+CREATE DATABASE microUser;
+CREATE DATABASE microBlog;

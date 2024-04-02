@@ -1,0 +1,63 @@
+doctrine:
+    dbal:
+        connections:
+            default:
+                url: '%env(resolve:DATABASE_URL)%'
+            events:
+                url: '%env(resolve:DATABASE_EVENTS_URL)%'
+        default_connection: default
+
+        types:
+            datetime: Shared\Infrastructure\Doctrine\Types\DatetimeDbalType
+            uuid: Shared\Infrastructure\Doctrine\Types\UuidDbalType
+            email: Shared\Infrastructure\Doctrine\Types\EmailDbalType
+
+    orm:
+        default_entity_manager: default
+        enable_lazy_ghost_objects: true
+        auto_generate_proxy_classes: true
+        entity_managers:
+            default:
+                connection: default
+                mappings:
+                    App\Modules\User\Domain\User:
+                        is_bundle: false
+                        type: xml
+                        dir: '%kernel.project_dir%/src/Modules/User/Infrastructure/DoctrineMappings'
+                        prefix: 'App\Modules\User\Domain'
+                        alias: User
+            events:
+                connection: events
+                mappings:
+                    App\Modules\Event\Domain\Event:
+                        is_bundle: false
+                        type: xml
+                        dir: '%kernel.project_dir%/src/Modules/Event/Infrastructure/DoctrineMappings'
+                        prefix: 'App\Modules\Event\Domain'
+                        alias: Event
+
+#when@test:
+#    doctrine:
+#        dbal:
+#            # "TEST_TOKEN" is typically set by ParaTest
+#            dbname_suffix: '_test%env(default::TEST_TOKEN)%'
+
+#when@prod:
+#    doctrine:
+#        orm:
+#            auto_generate_proxy_classes: false
+#            proxy_dir: '%kernel.build_dir%/doctrine/orm/Proxies'
+#            query_cache_driver:
+#                type: pool
+#                pool: doctrine.system_cache_pool
+#            result_cache_driver:
+#                type: pool
+#                pool: doctrine.result_cache_pool
+#
+#    framework:
+#        cache:
+#            pools:
+#                doctrine.result_cache_pool:
+#                    adapter: cache.app
+#                doctrine.system_cache_pool:
+#                    adapter: cache.system

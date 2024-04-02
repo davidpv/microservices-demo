@@ -1,0 +1,9 @@
+kernel:
+    resource: ../src/Kernel.php
+    type: annotation
+
+api.v1:
+    resource: 'routes/apps/api/posts.yaml'
+    prefix: /posts
+    trailing_slash_on_root: false
+    name_prefix: 'api.posts.'

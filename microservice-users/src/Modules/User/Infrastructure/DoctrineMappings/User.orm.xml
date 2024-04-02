@@ -1,0 +1,15 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                   https://raw.github.com/doctrine/doctrine2/master/doctrine-mapping.xsd">
+    <entity name="App\Modules\User\Domain\User" table="user">
+        <id name="id" column="id" type="uuid">
+            <generator strategy="NONE" />
+        </id>
+        <embedded name="username" class="App\Modules\User\Domain\UserUserName" column-prefix="false" use-column-prefix="false"/>
+        <embedded name="email" class="App\Modules\User\Domain\UserEmail" column-prefix="false" use-column-prefix="false"/>
+        <embedded name="firstName" class="App\Modules\User\Domain\UserFirstName" column-prefix="false" use-column-prefix="false"/>
+        <embedded name="lastName" class="App\Modules\User\Domain\UserLastName" column-prefix="false" use-column-prefix="false"/>
+        <embedded name="enabled" class="App\Modules\User\Domain\UserEnabled" column-prefix="false" use-column-prefix="false"/>
+    </entity>
+</doctrine-mapping>

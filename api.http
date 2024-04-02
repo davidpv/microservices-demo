@@ -1,0 +1,46 @@
+### list all users
+GET {{host}}/users
+Accept: application/json
+
+### enable user
+PATCH {{host}}/users/{{userId}}/enable
+Content-Type: application/json
+
+{
+    "userId": "{{userId}}"
+}
+
+### disable user
+PATCH {{host}}/users/{{userId}}/disable
+Content-Type: application/json
+
+{
+    "userId": "{{userId}}"
+}
+
+### create user
+POST {{host}}/users
+Content-Type: application/json
+
+{
+    "id":"{{$uuid}}",
+    "username":"{{$random.alphanumeric(8)}}",
+    "firstName":"david",
+    "lastName":"perez",
+    "email": "{{$random.email}}"
+}
+
+### create post
+POST {{host}}/posts
+Content-Type: application/json
+
+{
+    "id":"{{$uuid}}",
+    "userId":"{{userId}}",
+    "title":"{{$random.alphanumeric(12)}}",
+    "content":"{{$random.alphanumeric(20)}}"
+}
+
+### list all posts
+GET {{host}}/posts
+Accept: application/json

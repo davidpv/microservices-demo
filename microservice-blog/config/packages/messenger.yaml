@@ -1,0 +1,64 @@
+framework:
+    messenger:
+        # Uncomment this (and the failed transport below) to send failed messages to this transport for later handling.
+        # failure_transport: failed
+        default_bus: command.bus
+        serializer:
+            default_serializer: messenger.transport.symfony_serializer
+            symfony_serializer:
+                format: json
+                context: { }
+
+        transports:
+            null_transport: 'in-memory://'
+            sync: 'sync://'
+            async: '%env(MESSENGER_TRANSPORT_DSN)%'
+            async_priority_high:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                options:
+                    queues:
+                        users_enabled: ~
+                        users_disabled: ~
+
+        routing:
+            'Shared\Infrastructure\Bus\Query\Query': [ sync ]
+            'Shared\Infrastructure\Bus\Command\Command': [ sync ]
+            'Shared\Domain\Bus\Event\DomainEvent': [ sync ]
+            'App\Modules\User\Application\UserEnable\UserEnabledMessage': async_priority_high
+            'App\Modules\User\Application\UserDisable\UserDisabledMessage': async_priority_high
+
+        buses:
+            command.bus:
+                middleware:
+                    - doctrine_ping_connection
+                    - doctrine_close_connection
+                    - doctrine_transaction
+            query.bus:
+            event.bus:
+                default_middleware: allow_no_handlers
+                middleware:
+                    - doctrine_ping_connection
+                    - doctrine_close_connection
+                    - doctrine_transaction
+
+when@null:
+    framework:
+        messenger:
+            routing:
+                'Shared\Infrastructure\Bus\Query\Query': [ null_transport ]
+                'Shared\Infrastructure\Bus\Command\Command': [ null_transport ]
+                'Shared\Domain\Bus\Event\DomainEvent': [ null_transport ]
+
+when@prod:
+    framework:
+        messenger:
+            routing:
+                'Shared\Infrastructure\Bus\Query\Query': [ sync ]
+                'Shared\Infrastructure\Bus\Command\Command': [ async ]
+                'Shared\Domain\Bus\Event\DomainEvent': [ async ]
+
+when@test:
+    framework:
+        messenger:
+            transports:
+                async: 'in-memory://'

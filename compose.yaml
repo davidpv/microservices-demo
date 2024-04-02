@@ -1,0 +1,112 @@
+networks:
+  microservices:
+    driver: bridge
+
+volumes:
+  netdataconfig:
+  netdatalib:
+  netdatacache:
+  events-volume:
+
+services:
+
+  dbs:
+    container_name: dbs
+    image: mysql:8.0.36
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "33006:3306"
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - ./databases/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - microservices
+
+
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3-management-alpine
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - microservices
+
+  reverse-proxy:
+    container_name: traefik
+    image: traefik:v2.10
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - ./traefik:/etc/traefik
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+  users:
+    container_name: users
+    build:
+      context: ./microservice-users
+    ports:
+      - "5001:5001"
+    volumes:
+      - "./microservice-users:/var/www/html"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.users.rule=Host(`localhost`) && PathPrefix(`/users`)"
+      - "traefik.http.services.users.loadbalancer.server.port=5001"
+    depends_on:
+      dbs:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_started
+    networks:
+      - microservices
+
+  blog:
+    container_name: blog
+    build:
+      context: ./microservice-blog
+    ports:
+      - "5002:5002"
+    volumes:
+      - "./microservice-blog:/var/www/html"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.posts.rule=Host(`localhost`) && PathPrefix(`/posts`)"
+      - "traefik.http.services.posts.loadbalancer.server.port=5002"
+    depends_on:
+      dbs:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_started
+    networks:
+      - microservices
+
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    networks:
+      - microservices
+
+  send_mail:
+    build:
+      context: ./microservice-mailer
+    depends_on:
+      rabbitmq:
+        condition: service_started
+      mailhog:
+        condition: service_started
+    networks:
+      - microservices

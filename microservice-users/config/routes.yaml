@@ -1,0 +1,9 @@
+kernel:
+    resource: ../src/Kernel.php
+    type: annotation
+
+api.v1:
+    resource: 'routes/apps/api/users.yaml'
+    prefix: /users
+    trailing_slash_on_root: false
+    name_prefix: 'api.users.'

@@ -1,0 +1,9 @@
+services:
+
+    App\Modules\Post\Domain\PostRepository:
+        '@App\Modules\Post\Infrastructure\Repositories\DoctrinePostRepository'
+
+    App\Modules\Event\Domain\EventRepository:
+        class: 'App\Modules\Event\Infrastructure\Repositories\DoctrineEventRepository'
+        arguments:
+            - '@doctrine.orm.events_entity_manager'

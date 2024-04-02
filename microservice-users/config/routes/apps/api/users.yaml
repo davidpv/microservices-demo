@@ -1,0 +1,20 @@
+list:
+    path: /
+    controller: App\Apps\Api\Users\GetUsersController
+    methods: GET
+
+create:
+    path: /
+    controller: App\Apps\Api\Users\PostCreateUserController
+    methods: POST
+
+disable:
+    path: /{userId}/disable
+    controller: App\Apps\Api\Users\PatchDisableUserController
+    methods: PATCH
+
+enable:
+    path: /{userId}/enable
+    controller: App\Apps\Api\Users\PatchEnableUserController
+    methods: PATCH
+

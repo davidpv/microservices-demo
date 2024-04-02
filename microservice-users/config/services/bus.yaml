@@ -1,0 +1,10 @@
+services:
+
+  Shared\Infrastructure\Bus\Command\MessengerCommandBus:
+    tags: [ '@messenger.command.bus' ]
+
+  Shared\Infrastructure\Bus\Event\MessengerDomainEventBus:
+    tags: [ '@messenger.event.bus' ]
+
+  Shared\Infrastructure\Bus\Query\MessengerQueryBus:
+    tags: [ '@messenger.query.bus' ]
