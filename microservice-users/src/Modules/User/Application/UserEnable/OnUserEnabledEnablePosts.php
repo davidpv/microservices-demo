@@ -19,8 +19,6 @@ readonly class OnUserEnabledEnablePosts
 
     public function __invoke(UserEnabledEvent $event)
     {
-        //todo: send to rabbitmq queue user_enabled_event
-
         $message = new UserEnabledMessage($event->aggregateId());
         $this->bus->dispatch($message, [new AmqpStamp('users_enabled')]);
     }

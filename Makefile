@@ -47,8 +47,7 @@ ssh-blog: ## SSH into the blog container
 setup-transports: ## Setup transports
 	@docker compose exec users php bin/console messenger:setup-transports
 
-consumers: ## Start consumers
-	@docker compose exec users php bin/console messenger:consume async -vv
-	@docker compose exec blog php bin/console messenger:consume async -vv
-	@docker compose exec blog php bin/console messenger:consume async_priority_high  -vv
+## docker compose exec -T users php bin/console messenger:consume async -vv
+## docker compose exec -T blog php bin/console messenger:consume async
+## docker compose exec -T blog php bin/console messenger:consume async_priority_high -vv
 
