@@ -51,6 +51,8 @@ services:
     volumes:
       - ./traefik:/etc/traefik
       - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - microservices
 
   users:
     container_name: users
